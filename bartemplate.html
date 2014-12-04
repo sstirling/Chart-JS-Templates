@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Language Other than English Spoken at Home</title>
+		<link href="demo.css" rel="stylesheet" type="text/css">
+		<script src="Chart.js"></script>
+		<script src="pym.js"></script>
+	</head>
+	<body>
+
+<div style="background-color:white; color:black; width:75%; font-size:80%;">
+
+<h3>Language Other than English Spoken at Home</h3>
+<p>Percent of total population age 18 to 34 who speak a language other than English at home</p>
+
+</div>
+		<div style="width: 90%">
+			<canvas id="canvas" height="450" width="620"></canvas>
+		</div>
+		<div id="my-bar-legend"></div>
+
+
+	<script>
+	var barChartData = {
+		labels :["1980", "1990", "2000", "2009-2013"],
+		datasets : [
+			{
+				fillColor : "#bad132",
+                strokeColor : "#8b9c23",
+				highlightFill: "#8fd4ca",
+				highlightStroke: "#8fd4ca",
+				data : [14.3,20.1,32.3,36.6],
+				label : 'New Jersey'
+
+			},
+			{
+				fillColor : "#eadbc0",
+                strokeColor : "#b8a787",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [10.9,15.2,22.7,24.6],
+				label : 'United States'
+
+			}
+		]
+
+	}
+	window.onload = function(){
+		var ctx = document.getElementById("canvas").getContext("2d");
+		window.myBar = new Chart(ctx).Bar(barChartData, {
+			responsive : true,
+			barDatasetSpacing : 3,
+			scaleBeginAtZero : false,
+            tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>%",
+	    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><div class=\"comm-how\"><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+          });
+
+
+
+    var helpers = Chart.helpers;
+           var legendHolder = document.getElementById('my-bar-legend')
+      legendHolder.innerHTML = myBar.generateLegend();
+      // Include a html legend template after the module doughnut itself
+      helpers.each(legendHolder.firstChild.childNodes, function(legendNode, index){
+          helpers.addEvent(legendNode, 'mouseover', function(){
+              var activeDataset = myBar.datasets[index];
+              activeDataset.save();
+              activeDataset.fillColor = activeDataset.highlightColor;
+              myBar.showTooltip([activeDataset]);
+              activeDataset.restore();
+          });
+      });
+      helpers.addEvent(legendHolder.firstChild, 'mouseout', function(){
+          myBar.draw();
+      });
+      canvas.parentNode.parentNode.appendChild(legendHolder.firstChild);
+          
+    myBar.generateLegend();
+
+};
+
+
+	</script>
+	<script>
+var pymChild = new pym.Child();
+    </script>
+	</body>
+</html>
